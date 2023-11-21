@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider =  "cockroachdb"
+    provider = "cockroachdb"
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Post {
-    id        String      @id @default(cuid())
+    id        String   @id @default(cuid())
     name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -26,6 +26,23 @@ model Post {
     @@index([name])
 }
 
+model forms {
+    id                String   @id @default(cuid())
+    workout_title     String
+    completion_date   DateTime @default(now())
+    workout_type      String
+    checkboxes        String[]
+    updates           String
+    difficulty_rating Int
+    ongoing           Boolean
+    form_image        String
+
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
+
+    @@index([id])
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -33,7 +50,7 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String?  @db.String()
+    refresh_token     String? @db.String()
     access_token      String? @db.String()
     expires_at        Int?
     token_type        String?
@@ -62,6 +79,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    forms         forms[]
 }
 
 model VerificationToken {

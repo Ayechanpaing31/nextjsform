@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthShowcase } from "../components/AuthShowcase";
 
-import { api } from "~/utils/api";
-
 export default function Home() {
   const router = useRouter();
   const handleCreateNotePage = () => {
@@ -42,4 +40,6 @@ export default function Home() {
     </>
   );
 }
+
+
 
