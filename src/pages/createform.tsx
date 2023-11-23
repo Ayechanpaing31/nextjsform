@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { UploadDropzone } from "~/utils/uploadthing";
 import "@uploadthing/react/styles.css";
+import Link from 'next/link';
 
 
 type FormData = {
@@ -87,7 +88,7 @@ const ProjectForm: React.FC = () => {
     if (name === 'updates') {
       setUpdatesOption(value); // Update the separate state for radio button selection
       if (value === 'Others') {
-        setOthersOptionInput(formData.Others_option || ''); // Use an empty string if Others_option is undefined
+        setOthersOptionInput(formData.Others_option ?? ''); // Use an empty string if Others_option is undefined
         setFormData((prevData) => ({ ...prevData, updates: 'Others' }));
       } else {
         setFormData((prevData) => ({ ...prevData, updates: value }));
@@ -382,9 +383,9 @@ const ProjectForm: React.FC = () => {
 
 
           <div className="flex items-center justify-center gap-x-3 mt-5">
-            <a className="inline-flex items-center justify-center rounded-md text-sm font-medium" href="/home">
+            <Link className="inline-flex items-center justify-center rounded-md text-sm font-medium" href="/home">
               Discard
-            </a>
+            </Link>
             <button
               className="inline-flex items-center border:2px justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
               type="submit"

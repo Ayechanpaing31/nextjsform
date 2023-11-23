@@ -1,4 +1,5 @@
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 
@@ -17,9 +18,9 @@ const Header = () => {
   return (
     <div className="z-50 sticky top-0 bg-gray-800 text-center p-5 text-white flex items-center justify-between">
       <button data-state="closed">
-        <a href="/home">
+        <Link href="/home">
           <span className="text-2xl font-bold text-white">HEHE</span>
-        </a>
+        </Link>
       </button>
       <p>Dashboard</p>
       <div className="flex flex-col items-center justify-end gap-4">

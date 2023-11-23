@@ -8,6 +8,7 @@ import { UploadDropzone } from "~/utils/uploadthing";
 import { boolean } from 'zod';
 import type Form from '~/types/Form';
 import "@uploadthing/react/styles.css";
+import Link from 'next/link';
 
 
 
@@ -58,7 +59,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
 
     // Initialize data based on the selectedForm or form prop
     useEffect(() => {
-        const initialData = selectedForm || form;
+        const initialData = selectedForm ?? form;
 
         setData({
             id: initialData?.id,
@@ -145,7 +146,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
         if (name === 'updates') {
             setUpdatesOption(value); // Update the separate state for radio button selection
             if (value === 'Others') {
-                setOthersOptionInput(data.Others_option || ''); // Use an empty string if Others_option is undefined
+                setOthersOptionInput(data.Others_option ?? ''); // Use an empty string if Others_option is undefined
                 setData((prevData) => ({ ...prevData, updates: 'Others' }));
             } else {
                 setData((prevData) => ({ ...prevData, updates: value }));
@@ -197,25 +198,25 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
         }));
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'project_image' | 'project_brief') => {
-        const files = e.target.files;
-        setData((prevData) => ({ ...prevData, [fileType]: files }));
-    };
+    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'project_image' | 'project_brief') => {
+    //     const files = e.target.files;
+    //     setData((prevData) => ({ ...prevData, [fileType]: files }));
+    // };
 
-    const submitForm = async (event: any) => {
-        event.preventDefault();
-        formEditMutation.mutate({
-            id: data.id,
-            workout_title: data.workout_title,
-            completion_date: data.completion_date,
-            workout_type: data.workout_type,
-            checkboxes: data.checkboxes,
-            updates: data.updates,
-            difficulty_rating: data.difficulty_rating,
-            ongoing: data.ongoing,
-            form_image: data.form_image,
-        })
-    };
+    // const submitForm = async (event: any) => {
+    //     event.preventDefault();
+    //     formEditMutation.mutate({
+    //         id: data.id,
+    //         workout_title: data.workout_title,
+    //         completion_date: data.completion_date,
+    //         workout_type: data.workout_type,
+    //         checkboxes: data.checkboxes,
+    //         updates: data.updates,
+    //         difficulty_rating: data.difficulty_rating,
+    //         ongoing: data.ongoing,
+    //         form_image: data.form_image,
+    //     })
+    // };
 
 
 
@@ -281,7 +282,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
                                 >
                                     <option value="Cardio">Cardio</option>
                                     <option value="Weightlifting">Weightlifting</option>
-                                    <option value="Bodylifting">Bodylifting</option>
+                                    <option value="Bodybuilding">Bodybuilding</option>
                                     <option value="Crossfit">Crossfit</option>
 
                                 </select>
@@ -451,9 +452,9 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
 
 
                             <div className="flex items-center justify-center gap-x-3 mt-5">
-                                <a className="inline-flex items-center justify-center rounded-md text-sm font-medium" href="/home">
+                                <Link className="inline-flex items-center justify-center rounded-md text-sm font-medium" href="/home">
                                     Discard
-                                </a>
+                                </Link>
                                 <button
                                     className="inline-flex items-center border:2px justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
                                     type="submit"
