@@ -1,11 +1,10 @@
-import { useSession, getSession } from 'next-auth/react';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { getSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 import Head from "next/head";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { UploadDropzone } from "~/utils/uploadthing";
-import { boolean } from 'zod';
 import type Form from '~/types/Form';
 import "@uploadthing/react/styles.css";
 import Link from 'next/link';
@@ -78,7 +77,7 @@ const EditForm = ({ form }: { form: Form }) => {
         });
     }, [form, selectedForm]);
 
-    const handleEditForm = useCallback(async () => {
+    const handleEditForm = async () => {
         try {
             // Use the formEditMutation to update the form in the database
             const result = await formEditMutation.mutateAsync({
@@ -91,14 +90,13 @@ const EditForm = ({ form }: { form: Form }) => {
                 difficulty_rating: data.difficulty_rating,
                 ongoing: data.ongoing,
                 form_image: data.form_image,
-            });
-    
-            // Log the result if needed
-            console.log(result);
+            }).then((result)=> {
+                router.push('/home');
+            })
         } catch (error) {
             console.error(error);
         }
-    }, [data, formEditMutation, router]);
+    };
 
     
     const handleKeyDown = (e: React.KeyboardEvent) => {
