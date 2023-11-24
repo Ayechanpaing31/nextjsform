@@ -71,7 +71,7 @@ const EditForm = ({ form }: { form: Form }) => {
                 updates: data.updates,
                 difficulty_rating: data.difficulty_rating,
                 ongoing: data.ongoing,
-                form_image: selectedImage || data.form_image,
+                form_image: selectedImage ?? data.form_image,
             });
 
             // Redirect to the home page after a successful form submission
