@@ -15,7 +15,7 @@ export const formRouter = createTRPCRouter({
   //   const forms = await db.forms.findMany();
   //   return forms;
   // }),
-  formslist: protectedProcedure
+  formsList: protectedProcedure
     .query(async ({ ctx }) => {
         try {
             const forms = await db.forms.findMany({
