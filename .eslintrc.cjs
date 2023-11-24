@@ -27,6 +27,7 @@ const config = {
     "@typescript-eslint/restrict-plus-operands":"off",
     "@typescript-eslint/no-unsafe-call":"off",
     "@next/next/no-img-element":"off",
+    "@typescript-eslint/no-unsafe-argument": "off",
 
 
 
