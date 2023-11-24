@@ -12,37 +12,31 @@ import Link from 'next/link';
 
 
 
-const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
+const EditForm = ({ form }: { form: Form }) => {
     console.log('Form:', form);
 
 
-    const { data: sessionData, status } = useSession();
+    const { data: sessionData } = useSession();
     const [isEditing, setIsEditing] = useState<boolean>(true);
     const [data, setData] = useState<Form>({
-        id: form?.id || "",
-        workout_title: form?.workout_title || "",
-        completion_date: form?.completion_date || new Date(),
-        workout_type: form?.workout_type || "",
-        checkboxes: form?.checkboxes || [],
-        updates: form?.updates || "",
-        Others_option: "", // Handle the updates field here
-        difficulty_rating: form?.difficulty_rating || 0,
-        ongoing: form?.ongoing || false,
-        form_image: form?.form_image || "",
+        id: '',
+        workout_title: '',
+        completion_date: new Date(),
+        workout_type: 'cardio',
+        checkboxes: [],
+        Others_option: '',
+        updates: '',
+        difficulty_rating: 0,
+        ongoing: false,
+        form_image: '',
     });
 
 
     const router = useRouter();
-    console.log("router.query:", router.query);
+    
     const { id } = router.query;
-    console.log("id:", id);
-    const formContainer = useRef<HTMLDivElement>(null);
-    const formDeleteMutation = api.form.formsDelete.useMutation();
-    const formEditMutation = api.form.formsUpdate.useMutation({
-        onSuccess: () => {
-            router.push("/home")
-          },
-    });
+
+    const formEditMutation = api.form.formsUpdate.useMutation();
 
     // Define a state to store the selected form data
     const [selectedForm, setSelectedForm] = useState<Form | null>(null);
@@ -50,6 +44,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
     // Fetch the selected form data using useQuery
     const { data: selectedFormData } = id ? api.form.formSelectByID.useQuery({ id: id as string }) as { data: Form } : { data: null };
 
+    
     useEffect(() => {
         // Update the state with the selected form data when it changes
         if (selectedFormData) {
@@ -91,9 +86,6 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
     
             // Log the result if needed
             console.log(result);
-    
-            // Redirect to home page after successful submission
-            router.push("/home");
         } catch (error) {
             console.error(error);
         }
@@ -105,18 +97,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
             e.preventDefault(); // Prevent the default behavior of the Enter key
         }
     };
-    const handleDelete = async (id: string) => {
-        console.log(id);
-        try {
-            await formDeleteMutation.mutateAsync({ id }).then((result) => {
-                onDelete();
-            });
-        } catch (error) {
-            console.error("Error deleting form:", error);
-            //   toast.message("Error deleting form:" + error);
-        }
-        router.push("/home");
-    }
+    
     const handleUploadComplete = (res: any) => {
         // Assuming that the response contains the image URL
         const imageUrl = res?.[0]?.url || ''; // Adjust this based on the actual response structure
@@ -199,25 +180,6 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
         }));
     };
 
-    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'project_image' | 'project_brief') => {
-    //     const files = e.target.files;
-    //     setData((prevData) => ({ ...prevData, [fileType]: files }));
-    // };
-
-    // const submitForm = async (event: any) => {
-    //     event.preventDefault();
-    //     formEditMutation.mutate({
-    //         id: data.id,
-    //         workout_title: data.workout_title,
-    //         completion_date: data.completion_date,
-    //         workout_type: data.workout_type,
-    //         checkboxes: data.checkboxes,
-    //         updates: data.updates,
-    //         difficulty_rating: data.difficulty_rating,
-    //         ongoing: data.ongoing,
-    //         form_image: data.form_image,
-    //     })
-    // };
 
 
 
@@ -456,13 +418,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
                                 <Link className="inline-flex items-center justify-center rounded-md text-sm font-medium" href="/home">
                                     Discard
                                 </Link>
-                                <button
-                                    className="inline-flex items-center border:2px justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
-                                    type="submit"
-                                    onClick={() => handleDelete(form.id)}
-                                >
-                                    Delete
-                                </button>
+                              
                                 <button
                                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     type="submit"

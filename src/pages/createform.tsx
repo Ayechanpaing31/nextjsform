@@ -12,7 +12,7 @@ import Link from 'next/link';
 
 
 const ProjectForm: React.FC = () => {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData } = useSession();
   const [formData, setFormData] = useState<Form>({
     id: '',
     workout_title: '',
