@@ -1,6 +1,6 @@
 import type Form from "~/types/Form";
 import React, { useState, useEffect } from "react";
-import { default as FormViewer } from "~/components/Form";
+import { default as FormViewer } from "~/components/FormCard";
 
 const Forms = ({ forms }: { forms: Form[] }) => {
   const [localForms, setLocalForms] = useState<Form[] | null>(null);  

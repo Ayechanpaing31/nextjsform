@@ -4,28 +4,15 @@ import Head from "next/head";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import type Form from '~/types/Form';
 import { UploadDropzone } from "~/utils/uploadthing";
 import "@uploadthing/react/styles.css";
 import Link from 'next/link';
 
 
-type FormData = {
-  id: string,
-  workout_title: string;
-  completion_date: Date;
-  workout_type: string;
-  checkboxes: string[];
-  updates: string;
-  Others_option?: string;
-  difficulty_rating: number;
-  ongoing: boolean;
-  form_image: string;
-
-};
-
 const ProjectForm: React.FC = () => {
   const { data: sessionData, status } = useSession();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<Form>({
     id: '',
     workout_title: '',
     completion_date: new Date(),
@@ -216,7 +203,7 @@ const ProjectForm: React.FC = () => {
             >
               <option value="Cardio">Cardio</option>
               <option value="Weightlifting">Weightlifting</option>
-              <option value="Bodylifting">Bodylifting</option>
+              <option value="Bodybuilding">Bodybuilding</option>
               <option value="Crossfit">Crossfit</option>
 
             </select>

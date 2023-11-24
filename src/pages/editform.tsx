@@ -115,6 +115,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
             console.error("Error deleting form:", error);
             //   toast.message("Error deleting form:" + error);
         }
+        router.push("/home");
     }
     const handleUploadComplete = (res: any) => {
         // Assuming that the response contains the image URL
