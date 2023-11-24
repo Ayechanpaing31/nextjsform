@@ -23,7 +23,7 @@ const Form = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
 
   const formContainer = useRef<HTMLDivElement>(null);
   const formDeleteMutation = api.form.formsDelete.useMutation();
-  const formEditMutation = api.form.formsUpdate.useMutation();
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
         if (formContainer.current && !formContainer.current.contains(event.target as Node)) {
@@ -42,7 +42,7 @@ const Form = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
   const handleEditClick = () => {
     {setIsEditing(!isEditing);}
     // Push to the editform page with the id parameter
-    router.push(`/editform?id=${data.id}`);
+    router.push(`/editForm?id=${data.id}`);
   };
 
 

@@ -6,9 +6,7 @@ import { AuthShowcase } from "../components/AuthShowcase";
 
 export default function Home() {
   const router = useRouter();
-  const handleCreateNotePage = () => {
-    router.push('/home');
-  }
+  
   return (
     <>
       <Head>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Forms from "./formsmap";
+import Forms from "./formsMapping";
 import type Form from "~/types/Form";
 import { api } from "~/utils/api";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export default function home() {
   const router = useRouter();
   const { data: forms } = api.form.formslist.useQuery() as { data: Form[] };
   const handleCreateFormPage = () => {
-    router.push('/createform');
+    router.push('/createForm');
   };
 
   return (
@@ -34,7 +34,7 @@ export default function home() {
                   <h3 className="text-base text-l font-semibold leading-6 text-gray-900">
                     Start a new form
                   </h3>
-                  <Link href="/createform">
+                  <Link href="/createForm">
                     <div className="rounded-lg border bg-card text-card-foreground shadow-sm w-72 h-52 flex justify-center items-center">
                       <div className="p-4 pt-0 flex justify-center items-center">
                         <svg
