@@ -464,7 +464,7 @@ const EditForm = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
                                     Delete
                                 </button>
                                 <button
-                                    className="inline-flex items-center border:2px justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
+                                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     type="submit"
                                     onClick={() => {
                                         handleEditForm();
