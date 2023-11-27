@@ -37,7 +37,7 @@ const Header = () => {
               <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                 <img
                   className="aspect-square h-full w-full"
-                  src={session?.user?.image ?? '/fallback-image-url'} // Provide a fallback image URL
+                  src={session?.user?.image ?? undefined} // Provide a fallback image URL
                   alt="Profile"
                 />
               </span>

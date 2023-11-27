@@ -3,32 +3,34 @@ import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
 import Header from '../components/Header';
 import { api } from '~/utils/api';
 import { UploadDropzone } from '~/utils/uploadthing';
-
 import '@uploadthing/react/styles.css';
-
 import type Form from '~/types/Form';
 
 const EditForm: React.FC = () => {
-    const [updatesOption, setUpdatesOption] = useState('no'); // Maintain a separate state for radio button selection
+    const [updatesOption, setUpdatesOption] = useState('no');
     const [othersOptionInput, setOthersOptionInput] = useState('');
 
     const router = useRouter();
-    useEffect(() => {
-        const fetchData = async () => {
+
+    const fetchData = async () => {
+        try {
             const session = await getSession();
+            const redirectTo = "/";
             if (!session?.user) {
-                router.push('/');
+                router.push(redirectTo);
             }
-        };
+        } catch (error) {
+            console.error("Error fetching user:", error);
+            window.location.href = "/";
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
-
-
-
 
     // Define a state to store the form data
     const [data, setData] = useState<Form>({
@@ -44,16 +46,19 @@ const EditForm: React.FC = () => {
         form_image: '',
     });
 
-    const showOthersInput = data.updates !== null && data.updates !== 'maybe' && data.updates !== 'yes' && data.updates !== 'no';
+    const showOthersInput =
+        data.updates !== null && data.updates !== 'maybe' && data.updates !== 'yes' && data.updates !== 'no';
+
     // Get the 'id' from the router query
     const { id } = router.query;
-    console.log('id:', id);
 
     // Fetch the selected form data using useQuery
-    const { data: selectedFormData } = id
-        ? api.form.formSelectByID.useQuery({ id: id as string })
-        : { data: null };
-
+    const { data: selectedFormData, isLoading } = api.form.formSelectByID.useQuery(
+        { id: id as string },
+        {
+            enabled: !!id,
+        }
+    );
 
     // Update the state with the selected form data when it changes
     useEffect(() => {
@@ -65,7 +70,6 @@ const EditForm: React.FC = () => {
     // Define a mutation for updating the form data
     const formEditMutation = api.form.formsUpdate.useMutation();
     const [selectedImage, setSelectedImage] = useState<string | undefined>(data.form_image || undefined);
-
 
     // Handle the form submission
     const handleEditForm = async () => {
@@ -89,7 +93,6 @@ const EditForm: React.FC = () => {
             console.error(error);
         }
     };
-
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
@@ -118,7 +121,6 @@ const EditForm: React.FC = () => {
         // Handle the error as needed
         alert(`ERROR! ${error.message}`);
     };
-
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -150,8 +152,8 @@ const EditForm: React.FC = () => {
                 [name]: name === 'difficulty_rating' ? parseInt(value, 10) : value,
             }));
         }
-
     };
+
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type } = e.target;
 
@@ -163,8 +165,6 @@ const EditForm: React.FC = () => {
             setData((prevData) => ({ ...prevData, [name]: value }));
         }
     };
-
-
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = e.target;
@@ -179,6 +179,7 @@ const EditForm: React.FC = () => {
             return { ...prevData, checkboxes: updatedcheckboxes };
         });
     };
+
     const handleOngoingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData((prevData) => ({
             ...prevData,
@@ -186,7 +187,12 @@ const EditForm: React.FC = () => {
         }));
     };
 
+   
 
+    if (!id || isLoading) {
+        // Handle the case when id is undefined or data is still loading
+        return <div>Loading...</div>;
+    }
 
 
     return (
@@ -400,7 +406,7 @@ const EditForm: React.FC = () => {
                     </div>
                     {data.form_image !== null && (
                         <div className="mt-5">
-                            <span>Prev Image</span>
+                            <span>Current Image</span>
                             <img
                                 src={data.form_image}
                                 alt="Uploaded"

@@ -5,7 +5,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { Toaster, toast } from "sonner";
 import { api } from "~/utils/api";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 const FormCard = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
