@@ -1,21 +1,21 @@
+import React, { useState, useEffect } from 'react';
 import { getSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
-import Head from "next/head";
-import Header from "../components/Header";
-import { useRouter } from "next/router";
-import { api } from "~/utils/api";
-import { UploadDropzone } from "~/utils/uploadthing";
-import type Form from '~/types/Form';
-import "@uploadthing/react/styles.css";
+import Head from 'next/head';
 import Link from 'next/link';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/router';
 
+import Header from '../components/Header';
+import { api } from '~/utils/api';
+import { UploadDropzone } from '~/utils/uploadthing';
 
+import '@uploadthing/react/styles.css';
 
-const EditForm = ({ form }: { form: Form }) => {
+import type Form from '~/types/Form';
+
+const EditForm: React.FC = () => {
     const [updatesOption, setUpdatesOption] = useState('no'); // Maintain a separate state for radio button selection
     const [othersOptionInput, setOthersOptionInput] = useState('');
-    
+
     const router = useRouter();
     useEffect(() => {
         const fetchData = async () => {
@@ -27,7 +27,7 @@ const EditForm = ({ form }: { form: Form }) => {
         fetchData();
     }, []);
 
-  
+
 
 
     // Define a state to store the form data
@@ -44,6 +44,7 @@ const EditForm = ({ form }: { form: Form }) => {
         form_image: '',
     });
 
+    const showOthersInput = data.updates !== null && data.updates !== 'maybe' && data.updates !== 'yes' && data.updates !== 'no';
     // Get the 'id' from the router query
     const { id } = router.query;
     console.log('id:', id);
@@ -118,7 +119,7 @@ const EditForm = ({ form }: { form: Form }) => {
         alert(`ERROR! ${error.message}`);
     };
 
-   
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
@@ -328,35 +329,32 @@ const EditForm = ({ form }: { form: Form }) => {
                                 Maybe
                             </label>
                             <label className="mb-2 flex items-center">
-                                {/* {data.updates !== null && data.updates !== "maybe" && data.updates !== "yes" && data.updates !== "no" ? ( */}
-                                    <input
-                                        type="radio"
-                                        name="updates"
-                                        value="Others"
-                                        checked={data.updates !== null && data.updates !== "maybe" && data.updates !== "yes" && data.updates !== "no" }
-                                        onChange={(e) => handleChange(e)}
-                                    />
-                                {/* ) : ( */}
-                                    <span className="ml-2">
-                                        {data.updates !== null && data.updates !== "maybe" && data.updates !== "yes" && data.updates !== "no"  ? (
-                                            <input
-                                                type="text"
-                                                id="Others_option"
-                                                className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                                placeholder={data.updates}
-                                                name="Others_option"
-                                                value={othersOptionInput}
-                                                onChange={(e) => handleChange(e)}
-                                                onKeyDown={handleKeyDown}
-                                            />
-                                        ) : (
-                                            'Others'
-                                        )}
-                                    </span>
-                                {/* )} */}
-
-
+                                <input
+                                    type="radio"
+                                    name="updates"
+                                    value="Others"
+                                    checked={showOthersInput}
+                                    onChange={(e) => handleChange(e)}
+                                />
+                                <span className="ml-2">
+                                    {showOthersInput ? (
+                                        <input
+                                            type="text"
+                                            id="Others_option"
+                                            className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            placeholder={data.updates}
+                                            name="Others_option"
+                                            value={othersOptionInput}
+                                            onChange={(e) => handleChange(e)}
+                                            onKeyDown={handleKeyDown}
+                                        />
+                                    ) : (
+                                        'Others'
+                                    )}
+                                </span>
                             </label>
+
+
                         </div>
                     </div>
 
