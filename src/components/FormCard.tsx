@@ -26,21 +26,21 @@ const FormCard = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-        if (formContainer.current && !formContainer.current.contains(event.target as Node)) {
-            setIsEditing(false);
-        }
+      if (formContainer.current && !formContainer.current.contains(event.target as Node)) {
+        setIsEditing(false);
+      }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-}, [formContainer]);
+  }, [formContainer]);
   const router = useRouter();
 
   const handleEditClick = () => {
-    {setIsEditing(!isEditing);}
+    { setIsEditing(!isEditing); }
     // Push to the editform page with the id parameter
     router.push(`/editForm?id=${data.id}`);
   };
@@ -72,16 +72,18 @@ const FormCard = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
       <Toaster />
       <div ref={formContainer} className="flex w-full max-w-sm flex-col rounded-lg border p-4 shadow-xl">
         <a className="flex items-center justify-between space-x-8">
-          <p>Workout Title</p>
-          <input
-            className="w-full cursor-text p-2 font-bold"
-            name="workout_title"
-            value={data.workout_title}
-            disabled={!isEditing}
-            onChange={handleDataChange}
-          />
+          <div className="flex flex-col">
+            <p>Workout Title</p>
+            <input
+              className="w-full cursor-text p-2 font-bold"
+              name="workout_title"
+              value={data.workout_title}
+              disabled={!isEditing}
+              onChange={handleDataChange}
+            />
+          </div>
           <div className="flex items-center justify-center space-x-1">
-          <PencilIcon
+            <PencilIcon
               className="h-4 w-4 cursor-pointer transition-all hover:text-gray-600"
               onClick={handleEditClick}
               onFocus={(e) => toast.success("Focus!")}
@@ -90,7 +92,7 @@ const FormCard = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
               className="h-4 w-4 cursor-pointer transition-all hover:text-red-600"
               onClick={() => handleDelete(form.id)}
             />
-            
+
 
           </div>
         </a>
