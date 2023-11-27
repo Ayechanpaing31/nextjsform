@@ -8,10 +8,14 @@ import { UploadDropzone } from "~/utils/uploadthing";
 import type Form from '~/types/Form';
 import "@uploadthing/react/styles.css";
 import Link from 'next/link';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
 
 
 
 const EditForm = ({ form }: { form: Form }) => {
+    const [updatesOption, setUpdatesOption] = useState('no'); // Maintain a separate state for radio button selection
+    const [othersOptionInput, setOthersOptionInput] = useState('');
+    
     const router = useRouter();
     useEffect(() => {
         const fetchData = async () => {
@@ -23,7 +27,7 @@ const EditForm = ({ form }: { form: Form }) => {
         fetchData();
     }, []);
 
-    console.log('Form:', form);
+  
 
 
     // Define a state to store the form data
@@ -42,9 +46,13 @@ const EditForm = ({ form }: { form: Form }) => {
 
     // Get the 'id' from the router query
     const { id } = router.query;
+    console.log('id:', id);
 
     // Fetch the selected form data using useQuery
-    const { data: selectedFormData } = id ? api.form.formSelectByID.useQuery({ id: id as string }) as { data: Form } : { data: null };
+    const { data: selectedFormData } = id
+        ? api.form.formSelectByID.useQuery({ id: id as string })
+        : { data: null };
+
 
     // Update the state with the selected form data when it changes
     useEffect(() => {
@@ -110,8 +118,7 @@ const EditForm = ({ form }: { form: Form }) => {
         alert(`ERROR! ${error.message}`);
     };
 
-    const [updatesOption, setUpdatesOption] = useState('no'); // Maintain a separate state for radio button selection
-    const [othersOptionInput, setOthersOptionInput] = useState('');
+   
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
@@ -122,11 +129,13 @@ const EditForm = ({ form }: { form: Form }) => {
 
         if (name === 'updates') {
             setUpdatesOption(value); // Update the separate state for radio button selection
-            if (value === 'Others') {
-                setOthersOptionInput(data.Others_option ?? ''); // Use an empty string if Others_option is undefined
-                setData((prevData) => ({ ...prevData, updates: 'Others' }));
-            } else {
-                setData((prevData) => ({ ...prevData, updates: value }));
+            if (data.updates !== null) {
+                if (value === 'Others') {
+                    setOthersOptionInput(data.Others_option ?? ''); // Use an empty string if Others_option is undefined
+                    setData((prevData) => ({ ...prevData, updates: 'Others' }));
+                } else {
+                    setData((prevData) => ({ ...prevData, updates: value }));
+                }
             }
         } else if (name === 'Others_option') {
             setOthersOptionInput(value);
@@ -140,6 +149,7 @@ const EditForm = ({ form }: { form: Form }) => {
                 [name]: name === 'difficulty_rating' ? parseInt(value, 10) : value,
             }));
         }
+
     };
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type } = e.target;
@@ -318,29 +328,34 @@ const EditForm = ({ form }: { form: Form }) => {
                                 Maybe
                             </label>
                             <label className="mb-2 flex items-center">
-                                <input
-                                    type="radio"
-                                    name="updates"
-                                    value="Others"
-                                    checked={updatesOption === 'Others'}
-                                    onChange={(e) => handleChange(e)}
-                                />
-                                <span className="ml-2">
-                                    {updatesOption === 'Others' ? (
-                                        <input
-                                            type="text"
-                                            id="Others_option"
-                                            className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                            placeholder="Enter Others"
-                                            name="Others_option"
-                                            value={othersOptionInput}
-                                            onChange={(e) => handleChange(e)}
-                                            onKeyDown={handleKeyDown}
-                                        />
-                                    ) : (
-                                        'Others'
-                                    )}
-                                </span>
+                                {/* {data.updates !== null && data.updates !== "maybe" && data.updates !== "yes" && data.updates !== "no" ? ( */}
+                                    <input
+                                        type="radio"
+                                        name="updates"
+                                        value="Others"
+                                        checked={data.updates !== null && data.updates !== "maybe" && data.updates !== "yes" && data.updates !== "no" }
+                                        onChange={(e) => handleChange(e)}
+                                    />
+                                {/* ) : ( */}
+                                    <span className="ml-2">
+                                        {data.updates !== null && data.updates !== "maybe" && data.updates !== "yes" && data.updates !== "no"  ? (
+                                            <input
+                                                type="text"
+                                                id="Others_option"
+                                                className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                                placeholder={data.updates}
+                                                name="Others_option"
+                                                value={othersOptionInput}
+                                                onChange={(e) => handleChange(e)}
+                                                onKeyDown={handleKeyDown}
+                                            />
+                                        ) : (
+                                            'Others'
+                                        )}
+                                    </span>
+                                {/* )} */}
+
+
                             </label>
                         </div>
                     </div>
@@ -385,29 +400,6 @@ const EditForm = ({ form }: { form: Form }) => {
                             </span>
                         </label>
                     </div>
-
-                    <div className="space-y-2 mt-5">
-                        <label className="text-lg font-bold leading-none">Postworkout Selfie</label>
-                        <div>
-                            <UploadDropzone
-                                className="bg-slate-800 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300"
-                                endpoint="imageUploader"
-                                onClientUploadComplete={handleUploadComplete}
-                                onUploadError={handleUploadError}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Display the uploaded image if available */}
-                    {/* {selectedImage  && (
-                        <div className="mt-5">
-                            <img
-                                src={selectedImage || data.form_image }
-                                alt="Uploaded"
-                                className="max-w-full max-h-48 mx-auto mb-2"
-                            />
-                        </div>
-                    )} */}
                     {data.form_image !== null && (
                         <div className="mt-5">
                             <span>Prev Image</span>
@@ -419,7 +411,7 @@ const EditForm = ({ form }: { form: Form }) => {
                         </div>
                     )}
 
-                    { selectedImage && (
+                    {selectedImage && (
                         <div className="mt-5">
                             <span>New Image</span>
                             <img
@@ -430,8 +422,18 @@ const EditForm = ({ form }: { form: Form }) => {
                         </div>
                     )}
 
+                    <div className="space-y-2 mt-5">
+                        <label className="text-lg font-bold leading-none">Postworkout Selfie</label>
+                        <div>
+                            <UploadDropzone
+                                className="bg-slate-800 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300"
+                                endpoint="imageUploader"
+                                onClientUploadComplete={handleUploadComplete}
+                                onUploadError={handleUploadError}
+                            />
+                        </div>
 
-
+                    </div>
                     <div className="flex items-center justify-center gap-x-3 mt-5">
                         <Link className="inline-flex items-center justify-center rounded-md text-sm font-medium" href="/home">
                             Discard

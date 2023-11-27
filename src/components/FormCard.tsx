@@ -7,7 +7,7 @@ import { Toaster, toast } from "sonner";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 
-const Form = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
+const FormCard = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [data, setData] = useState<Form>({
     id: form.id,
@@ -72,6 +72,7 @@ const Form = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
       <Toaster />
       <div ref={formContainer} className="flex w-full max-w-sm flex-col rounded-lg border p-4 shadow-xl">
         <a className="flex items-center justify-between space-x-8">
+          <p>Workout Title</p>
           <input
             className="w-full cursor-text p-2 font-bold"
             name="workout_title"
@@ -99,5 +100,5 @@ const Form = ({ form, onDelete }: { form: Form, onDelete: () => void }) => {
   );
 };
 
-export default Form;
+export default FormCard;
 

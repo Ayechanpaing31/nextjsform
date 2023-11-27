@@ -19,7 +19,7 @@ const Header = () => {
     <div className="z-50 sticky top-0 bg-gray-800 text-center p-5 text-white flex items-center justify-between">
       <button data-state="closed">
         <Link href="/home">
-          <span className="text-2xl font-bold text-white">HEHE</span>
+          <span className="text-2xl font-bold text-white">Form</span>
         </Link>
       </button>
       <p>Dashboard</p>
