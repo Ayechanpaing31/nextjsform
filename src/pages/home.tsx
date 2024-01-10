@@ -69,8 +69,6 @@ export default function home() {
                   </button>
                 </div>
               </div>
-
-              
             </div>
             <Forms forms={forms} />
           </main>
